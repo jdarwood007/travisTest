@@ -4,4 +4,4 @@ php:
   - 7.0
 
 script:
-  - check-signed-off.php
+  - php check-signed-off.php
