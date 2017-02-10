@@ -1,0 +1,7 @@
+language: php
+
+php:
+  - 7.0
+
+script:
+  - if php check-signed-off.php | grep "Error:"; then exit 1; fi
