@@ -62,6 +62,14 @@ if (preg_match('~Merge ([A-Za-z0-9]{40}) into ([A-Za-z0-9]{40})~i', $lastLine, $
 else
 	$debugSecondary = base64_encode(json_encode(array(NULL)));
 
+echo "--DEBUG MASTER--\n";
+echo $debugMaster . "\n";
+echo "--DEBUG MASTER--\n";
+
+echo "--DEBUG SECONDARY--\n";
+echo $debugSecondary . "\n";
+echo "--DEBUG SECONDARY--\n";
+
 $result = stripos($lastLine, 'Signed-off-by:');
 if ($result === false)
 {
@@ -69,14 +77,6 @@ if ($result === false)
 	$result2 = stripos($lastLine, 'Signed by');
 	if ($result2 === false)
 	{
-		echo "--DEBUG MASTER--\n";
-		echo $debugMaster . "\n";
-		echo "--DEBUG MASTER--\n";
-
-		echo "--DEBUG SECONDARY--\n";
-		echo $debugSecondary . "\n";
-		echo "--DEBUG SECONDARY--\n";
-
 		die('Error: Signed-off-by not found in commit message [' . $lastLine . ']' . '[' . $message . ']' . '[' . $debugSecondary . '][' . $debugMaster . ']' . "\n");
 	}
 }
