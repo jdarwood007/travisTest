@@ -16,22 +16,33 @@ $lines = explode("\n", trim(str_replace("\r", "\n", $message)));
 $lastLine = $lines[count($lines) - 1];
 
 // This is debugging stuff for now to figure out why Travis can fail to get us the right info about a signed off commit.
-$debugMaster = base64_encode(json_encode(array(
-	// Raw body.
-	'B' => shell_exec('git show -s --format=%B HEAD'),
-	// Body.
-	'b2' => shell_exec('git show -s --format=%b HEAD'),
-	// Commit notes.
-	'N' => shell_exec('git show -s --format=%N HEAD'),
-	// Ref names.
-	'd' => shell_exec('git show -s --format=%d HEAD'),
-	// Commit hash.
-	'H' => shell_exec('git show -s --format=%H HEAD'),
-	// Tree hash.
-	'T' => shell_exec('git show -s --format=%T HEAD'),
-	// Parent hash.
-	'P' => shell_exec('git show -s --format=%P HEAD'),
-)));
+echo "--DEBUG MASTER B --\n";
+shell_exec('git show -s --format=%B HEAD');
+echo "\n--DEBUG MASTER B --\n";
+
+echo "--DEBUG MASTER B2 --\n";
+shell_exec('git show -s --format=%b HEAD');
+echo "\n--DEBUG MASTER B2 --\n";
+
+echo "--DEBUG MASTER N --\n";
+shell_exec('git show -s --format=%N HEAD');
+echo "\n--DEBUG MASTER N --\n";
+
+echo "--DEBUG MASTER d --\n";
+shell_exec('git show -s --format=%d HEAD');
+echo "\n--DEBUG MASTER d --\n";
+
+echo "--DEBUG MASTER H --\n";
+shell_exec('git show -s --format=%H HEAD');
+echo "\n--DEBUG MASTER H --\n";
+
+echo "--DEBUG MASTER T --\n";
+shell_exec('git show -s --format=%T HEAD');
+echo "\n--DEBUG MASTER T --\n";
+
+echo "--DEBUG MASTER P --\n";
+shell_exec('git show -s --format=%P HEAD');
+echo "\n--DEBUG MASTER P --\n";
 
 // Did we find a merge?
 if (preg_match('~Merge ([A-Za-z0-9]{40}) into ([A-Za-z0-9]{40})~i', $lastLine, $merges))
@@ -41,34 +52,36 @@ if (preg_match('~Merge ([A-Za-z0-9]{40}) into ([A-Za-z0-9]{40})~i', $lastLine, $
 	$lines = explode("\n", trim(str_replace("\r", "\n", $message)));
 	$lastLine = $lines[count($lines) - 1];
 
+
 	// This is debugging stuff for now to figure out why Travis can fail to get us the right info about a signed off commit.
-	$debugSecondary = base64_encode(json_encode(array(
-		// Raw body.
-		'B' => shell_exec('git show -s --format=%B HEAD'),
-		// Body.
-		'b2' => shell_exec('git show -s --format=%b HEAD'),
-		// Commit notes.
-		'N' => shell_exec('git show -s --format=%N HEAD'),
-		// Ref names.
-		'd' => shell_exec('git show -s --format=%d HEAD'),
-		// Commit hash.
-		'H' => shell_exec('git show -s --format=%H HEAD'),
-		// Tree hash.
-		'T' => shell_exec('git show -s --format=%T HEAD'),
-		// Parent hash.
-		'P' => shell_exec('git show -s --format=%P HEAD'),
-	)));
+	echo "--DEBUG SECONDARY B --\n";
+	shell_exec('git show -s --format=%B ' . $merges[1] . '');
+	echo "\n--DEBUG SECONDARY B --\n";
+
+	echo "--DEBUG SECONDARY B2 --\n";
+	shell_exec('git show -s --format=%b ' . $merges[1] . '');
+	echo "\n--DEBUG SECONDARY B2 --\n";
+
+	echo "--DEBUG SECONDARY N --\n";
+	shell_exec('git show -s --format=%N ' . $merges[1] . '');
+	echo "\n--DEBUG SECONDARY N --\n";
+
+	echo "--DEBUG SECONDARY d --\n";
+	shell_exec('git show -s --format=%d ' . $merges[1] . '');
+	echo "\n--DEBUG SECONDARY d --\n";
+
+	echo "--DEBUG SECONDARY H --\n";
+	shell_exec('git show -s --format=%H ' . $merges[1] . '');
+	echo "\n--DEBUG SECONDARY H --\n";
+
+	echo "--DEBUG SECONDARY T --\n";
+	shell_exec('git show -s --format=%T ' . $merges[1] . '');
+	echo "\n--DEBUG SECONDARY T --\n";
+
+	echo "--DEBUG SECONDARY P --\n";
+	shell_exec('git show -s --format=%P ' . $merges[1] . '');
+	echo "\n--DEBUG SECONDARY P --\n";
 }
-else
-	$debugSecondary = base64_encode(json_encode(array(NULL)));
-
-echo "--DEBUG MASTER--\n";
-echo $debugMaster . "\n";
-echo "--DEBUG MASTER--\n";
-
-echo "--DEBUG SECONDARY--\n";
-echo $debugSecondary . "\n";
-echo "--DEBUG SECONDARY--\n";
 
 $result = stripos($lastLine, 'Signed-off-by:');
 if ($result === false)
