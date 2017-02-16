@@ -47,6 +47,9 @@ function find_signed_off($commit = 'HEAD', $childs = array(), $level = 0)
 {
 	global $debugMsgs;
 
+	// Where we are at.
+	debugPrint('Attempting to Find signed off on commit [' . $commit . ']');
+
 	// To many recrusions here.
 	if ($level > 10)
 	{
@@ -70,10 +73,12 @@ function find_signed_off($commit = 'HEAD', $childs = array(), $level = 0)
 	$result = false;
 	foreach ($stringTests as $testedString)
 	{
+		debugPrint('Testing [' . $testedString . ']');
+
 		$result = stripos($lastLine, $testedString);
 
 		// We got a result.
-		if ($result >= 0)
+		if ($result !== false)
 		{
 			debugPrint('Found Result [' . $testedString . ']');
 			break;
@@ -103,7 +108,7 @@ function find_signed_off($commit = 'HEAD', $childs = array(), $level = 0)
 	);
 
 	// No result and found a merge? Lets go deeper.
-	if (empty($result) && preg_match('~Merge ([A-Za-z0-9]{40}) into ([A-Za-z0-9]{40})~i', $lastLine, $merges))
+	if ($result === false && preg_match('~Merge ([A-Za-z0-9]{40}) into ([A-Za-z0-9]{40})~i', $lastLine, $merges))
 	{
 		debugPrint('Found Merge, attempting to get more parent commit: ' . $merges[1]);
 
@@ -118,8 +123,10 @@ function find_gpg($commit = 'HEAD', $childs = array())
 {
 	global $debugMsgs;
 
+	debugPrint('Attempting to Find GPG on commit [' . $commit . ']');
+
 	// Get verify commit data.
-	$message = trim(shell_exec('git verify-commit ' . $commit));
+	$message = trim(shell_exec('git verify-commit ' . $commit . ' -v --raw'));
 
 	// Should we actually test for gpg results?  Perhaps, but it seems doing that with travis may fail since it has no way to verify a GPG signature from GitHub.  GitHub should have prevented a bad GPG from making a commit to a authors repository and could be trusted in most cases it seems.
 	$result = strlen($message) > 0;
