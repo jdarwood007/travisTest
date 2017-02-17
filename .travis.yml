@@ -4,4 +4,5 @@ php:
   - 7.0
 
 script:
-  - php check-signed-off.php
+  - git clone https://github.com/jdarwood007/buildTools.git buildTools
+  - php buildTools/check-signed-off.php
